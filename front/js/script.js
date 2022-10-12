@@ -3,7 +3,7 @@
 fetch("http://localhost:3000/api/products")
 // Promesse  pour récupérer la réponse puis la transformer en json
     .then(response => response.json())
-// Promesse  pour afficher les données
+// Promesse  pour récupérer les data
     .then(data => {
       getAllProducts(data);
     })
@@ -17,9 +17,9 @@ fetch("http://localhost:3000/api/products")
 function getAllProducts(data) {
 // Boucle pour chaque product de data
   for (product of data) {
-// Trouver l'élément #items dans index.html...
+// Trouver la section #items dans index.html
         const items = document.getElementById('items');
-// Modifier le contenu dans la section items
+// Modifier le contenu de la section #items
         items.innerHTML += `<a href="./product.html?id=${product._id}">
                               <article>
                                 <img src="${product.imageUrl}" alt="${product.altTxt}">

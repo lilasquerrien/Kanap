@@ -1,5 +1,5 @@
-var str = "https://waytolearnx.com/t.html?name=alex-babtise&age=25&address=paris";
-var url = new URL(str);
-var name = url.searchParams.get("name");
-console.log(name);
+// Récuperer l'id du produit à afficher
 
+let url = new URLSearchParams(document.location.search);
+let id = url.get('id')
+console.log(id) 
