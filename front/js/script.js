@@ -5,7 +5,7 @@ fetch("http://localhost:3000/api/products")
     .then(response => response.json())
 // Promesse  pour récupérer les data
     .then(data => {
-      getAllProducts(data);
+      displayProducts(data);
     })
 // Message d'erreur
     .catch(error => {
@@ -14,18 +14,16 @@ fetch("http://localhost:3000/api/products")
 
 // Afficher les produits
 
-function getAllProducts(data) {
+function displayProducts(data) {
 // Boucle pour chaque product de data
   for (product of data) {
-// Trouver la section #items dans index.html
-        const items = document.getElementById('items');
-// Modifier le contenu de la section #items
-        items.innerHTML += `<a href="./product.html?id=${product._id}">
-                              <article>
-                                <img src="${product.imageUrl}" alt="${product.altTxt}">
-                                <h3 class="productName">${product.name}</h3>
-                                <p class="productDescription">${product.description}</p>
-                              </article>
-                            </a>`;     
-  }
+// Trouver la section avec l'ID items dans index.html et modifier son contenu
+        let items = document.querySelector("#items").innerHTML += `<a href="./product.html?id=${product._id}">
+                                                                    <article>
+                                                                      <img src="${product.imageUrl}" alt="${product.altTxt}">
+                                                                      <h3 class="productName">${product.name}</h3>
+                                                                      <p class="productDescription">${product.description}</p>
+                                                                    </article>
+                                                                  </a>`;     
+  }      
 }
