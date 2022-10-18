@@ -9,10 +9,10 @@ fetch("http://localhost:3000/api/products")
       displayProducts(data)
 // Déclarer la fonction pour afficher les produits
       function displayProducts(data) {
-// Boucle pour afficher chacun des produits de data
+// Boucle pour afficher chacun des produits
         for (product of data) {
-// Trouver la section  #items dans index.html et modifier son contenu
-          let items = document.querySelector("#items").innerHTML += `<a href="./product.html?id=${product._id}">
+// Trouver la section #items dans index.html et modifier son contenu
+          let products = document.querySelector("#items").innerHTML += `<a href="./product.html?id=${product._id}">
                                                                       <article>
                                                                         <img src="${product.imageUrl}" alt="${product.altTxt}">
                                                                           <h3 class="productName">${product.name}</h3>
@@ -24,4 +24,4 @@ fetch("http://localhost:3000/api/products")
     })
 // Message d'erreur
     .catch(error => {
-      alert("Erreur, veuillez recharger la page")})
+      alert("Erreur, veuillez recharger la page!")})
