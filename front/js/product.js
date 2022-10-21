@@ -12,7 +12,7 @@ let quantity = document.querySelector("#quantity");
 let addToCart = document.querySelector("#addToCart");
 
 /* FONCTION POUR AFFICHER LES DÉTAILS DE CHAQUE PRODUIT */
-function getProductDetails(){
+function displayProductDetails(){
 // Récupérer les données du produit dans l'API
     fetch("http://localhost:3000/api/products/" + productId)
 // Promesse  pour récupérer la réponse puis la transformer en json
@@ -34,10 +34,10 @@ function getProductDetails(){
         })
 }
 // Appel de la fonction
-getProductDetails();
+displayProductDetails();
 
 /* FONCTION POUR AJOUTER LES PRODUITS AU PANIER */
-function addProductToCart() {
+function storeProductDetails() {
 // Écoute du bouton Ajouter au panier
     addToCart.addEventListener("click", () => {
 // Obliger le client à choisir une couleur
@@ -46,36 +46,40 @@ function addProductToCart() {
         }
 // Obliger le client à choisir une quantité entre 1 et 100
         if (quantity.value < 1 || quantity.value > 100 ) {
-            alert("Veuillez choisir une quantité entre 1 et 100!");
+            alert("Veuillez choisir une quantité d'article(s) entre 1 et 100!");
         }
-
 // Message de confirmation d'ajout du produit au panier: continuer les achats?
         if (color.value != "" && quantity.value >= 1 || quantity.value <= 100 ) {
-            alert("Votre article a été ajouté au panier, cliquez sur OK pour continuer vos achats!");
-
+            alert(`Vous avez ajouté ${quantity.value} ${title.textContent} ${color.value} au panier, cliquez sur OK pour continuer vos achats!`);
         }
 // Données à enregistrer dans le local storage
-    const customerChoice = {
+    const customerSelection = {
         id: productId,
         color: color.value,
         quantity: quantity.value,
     }
-        console.log(customerChoice);
-
-// Convertir JSON customerChoice en chaîne de charactères et stocker les données dans le local storage
-window.localStorage.setItem("customerChoice", JSON.stringify(customerChoice));
 // Récuperer les données dans le local storage
-let newCustomerChoice = window.localStorage.getItem("customerChoice");
-console.log(JSON.parse(newCustomerChoice));
+        let customerCart = JSON.parse(localStorage.getItem("Canapé"));
+// Si panier vide alors convertir JSON customerChoice en chaîne de charactères et stocker les données dans le local storage
+            if (!customerCart) {
+                customerCart = [];
+                customerCart.push(customerSelection);
+                localStorage.setItem("Canapé", JSON.stringify(customerCart));
+// Si déjà prédent alors alors on incrémente la quantité du produit correspondant
+            } else {
 
 
-    // Ajouter un produit à l'array lorsqu'il est ajouté au panier si pas déjà présent
 
-    // Si déjà prédent alors alors on incrémente la quantité du produit correspondant
+            }
 
+    })
+}
+    
 
-
-
-})};
 // Appel de la fonction
-addProductToCart();
+storeProductDetails();
+
+
+
+ 
+
