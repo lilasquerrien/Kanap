@@ -12,13 +12,13 @@ fetch("http://localhost:3000/api/products")
 // Boucle pour afficher chacun des produits
         for (product of data) {
 // Trouver la section #items dans index.html et modifier son contenu
-          let products = document.querySelector("#items").innerHTML += `<a href="./product.html?id=${product._id}">
-                                                                      <article>
-                                                                        <img src="${product.imageUrl}" alt="${product.altTxt}">
-                                                                          <h3 class="productName">${product.name}</h3>
-                                                                            <p class="productDescription">${product.description}</p>
-                                                                      </article>
-                                                                    </a>`;
+          let products = document.querySelector("#items").innerHTML +=  `<a href="./product.html?id=${product._id}">
+                                                                          <article>
+                                                                            <img src="${product.imageUrl}" alt="${product.altTxt}">
+                                                                            <h3 class="productName">${product.name}</h3>
+                                                                              <p class="productDescription">${product.description}</p>
+                                                                          </article>
+                                                                        </a>`;
         }      
       }
     })
