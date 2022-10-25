@@ -1,7 +1,11 @@
 // Récuperer les données dans le local storage
-let customerCart = JSON.parse(localStorage.getItem("Canapé"));
+let customerCart = JSON.parse(localStorage.getItem("Canapé")) || [];
 
-/* FONCTION POUR AFFICHER LES PRODUITS DU PANIER */
+// Déclarer les variables nécessaires
+let totalPrice = [];
+let totalQuantity = [];
+
+/* FONCTION POUR AFFICHER LES PRODUITS SÉLECTIONNÉS DANS LE PANIER */
 function displayItems() {
 // Si le panier est vide alors on affiche un message d'alerte
     if (customerCart === null || customerCart.lenght == 0) {
@@ -29,9 +33,64 @@ function displayItems() {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </article>`;
-        }
+                                                                </article>`;                                                             
+// Transformer les données quantité et prix en nombre                                                 
+    let quantityNumber = Number(customerCart[i].quantity);
+    let priceNumber = Number(customerCart[i].price * customerCart[i].quantity);
+// Envoyer les quantités et les prix dans le local storage
+        totalQuantity.push(quantityNumber);
+        totalPrice.push(priceNumber);                          
+         }  
     }
 }
 // Appel de la fonction
 displayItems();
+
+/* FONCTION POUR OBTENIR LES TOTAUX DES QUANTITÉS ET PRIX DES ARTICLES DU PANIER */
+function displayTotals() {
+// Constante pour ajouter les chiffres entre eux
+    const total = (accumulator, currentValue) => accumulator + currentValue;
+// Additionner les quantités totales de chaque produit du panier
+    const grandTotalQuantity = totalQuantity.reduce(total, 0);
+// Additionner les prix totaux de chaque produit du panier      
+    const grandTotalPrice = totalPrice.reduce(total, 0);
+// Modifier le contenu HTML correspondant pour l'affichage        
+        document.querySelector("#totalQuantity").innerHTML += `${grandTotalQuantity}`;
+        document.querySelector("#totalPrice").innerHTML += `${grandTotalPrice}`;
+}
+// Appel de la fonction
+displayTotals();
+
+/* FONCTION POUR MODIFIER LA QUANTITÉ DES ARTICLES DU PANIER */
+function modifyItems() {
+
+}
+
+// Appel de la fonction
+modifyItems();
+
+/* FONCTION POUR SUPPRIMER DES ARTICLES DU PANIER */
+function deleteItems() {
+    let deleteItem = document.querySelectorAll(".deleteItem");
+// Pour chacun des articles on active l'écoute du bouton supprimer
+    deleteItem.forEach((deleteItem) => {
+        deleteItem.addEventListener("click", (event) => {
+            event.preventDefault();
+// On supprime l'enfant le plus proche de la div cart__item
+    let item = deleteItem.closest(".cart__item");
+// Filtrer l'élement sélectionné avec le clic sur le bouton supprimer
+        customerCart = customerCart.filter( item => item.id !== item.id || item.color !== item.color );
+// Envoi des infos au local storage
+            localStorage.setItem("Canapé", JSON.stringify(customerCart));
+// Message d'alerte
+                alert("L'article a bien été supprimé de votre panier!");
+// Supprimer l'enfant de son parent l'arbre
+            if (item.parentNode) {
+                item.parentNode.removeChild(item);
+            }
+
+        })
+    })
+}
+// Appel de la fonction
+deleteItems();

@@ -73,7 +73,7 @@ function storeProductInLocalStorage() {
 // Définir la constante si le produit est déjà présent dans le panier: trouver par id et couleur
             const alreadyInCart = customerCart.find(element => element.id == customerSelection.id && element.color == customerSelection.color);
 // Si le produit n'est pas déjà dans le panier alors on push les données
-                if (productInCart == undefined) {
+                if (alreadyInCart == undefined) {
                     customerCart.push(customerSelection);
                     localStorage.setItem("Canapé", JSON.stringify(customerCart));
 // Si le produit (id+couleur identiques) est déjà prédent dans le panier alors on incrémente la quantité
