@@ -62,12 +62,27 @@ function displayTotals() {
 displayTotals();
 
 /* FONCTION POUR MODIFIER LA QUANTITÉ DES ARTICLES DU PANIER */
-function modifyItems() {
-
+function modifyQuantities() {
+    const newQuantity = document.querySelectorAll(".itemQuantity");
+// Boucle pour modifier la quantité
+    for (let i = 0; i < newQuantity.length; i++) {
+        const modifyQuantity = newQuantity[i];
+// Pour chacun des articles on active l'écoute du bouton modifier la quantité
+        modifyQuantity.addEventListener("change", (event) =>{
+// Modification du contenu HTML
+            newQuantity.innerHTML += `<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${event.target.value}">`;
+// Avoir la nouvelle quantité en nombre
+        customerCart[i].quantity = Number(modifyQuantity.value);
+// Envoi des infos au local storage
+        localStorage.setItem("Canapé", JSON.stringify(customerCart));
+// Message d'alerte
+            alert("Le nombre d'articles a bien été mis à jour dans votre panier!");
+        })
+    }
 }
-
-// Appel de la fonction
-modifyItems();
+// Appel de la fonction  
+modifyQuantities();
+    
 
 /* FONCTION POUR SUPPRIMER DES ARTICLES DU PANIER */
 function deleteItems() {
@@ -75,20 +90,18 @@ function deleteItems() {
 // Pour chacun des articles on active l'écoute du bouton supprimer
     deleteItem.forEach((deleteItem) => {
         deleteItem.addEventListener("click", (event) => {
-            event.preventDefault();
 // On supprime l'enfant le plus proche de la div cart__item
-    let item = deleteItem.closest(".cart__item");
+            let item = deleteItem.closest(".cart__item");
 // Filtrer l'élement sélectionné avec le clic sur le bouton supprimer
-        customerCart = customerCart.filter( item => item.id !== item.id || item.color !== item.color );
+    customerCart = customerCart.filter( item => item.id !== item.id || item.color !== item.color );
 // Envoi des infos au local storage
-            localStorage.setItem("Canapé", JSON.stringify(customerCart));
+    localStorage.setItem("Canapé", JSON.stringify(customerCart));
 // Message d'alerte
-                alert("L'article a bien été supprimé de votre panier!");
-// Supprimer l'enfant de son parent l'arbre
+        alert("L'article a bien été supprimé de votre panier!");
+// Supprimer l'enfant de son parent
             if (item.parentNode) {
                 item.parentNode.removeChild(item);
             }
-
         })
     })
 }

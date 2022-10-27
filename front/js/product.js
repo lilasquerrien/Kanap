@@ -60,7 +60,7 @@ function storeProductInLocalStorage() {
                     quantity: quantity.value,
                     name: title.textContent,
                     price: price.textContent,
-                }
+                };
 // Récuperer les données dans le local storage
     let customerCart = JSON.parse(localStorage.getItem("Canapé"));
 // Si le panier est vide alors on push les données de customerSelection dans le local storage sous forme de tableau
