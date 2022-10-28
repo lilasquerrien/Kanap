@@ -27,9 +27,9 @@ function displayProductDetails(){
             price.innerHTML += `<span id="price">${data.price}</span>`;
             description.innerHTML += `<p id="description">${data.description}}</p>`;
 // Boucle pour modifier les couleurs
-            for (i = 0; i < data.colors.length; i++) {
-                color.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`
-            }})
+        for (i = 0; i < data.colors.length; i++) {
+            color.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`
+        }})
 // Message d'erreur
         .catch(error => {
             alert("Erreur, veuillez recharger la page!")
@@ -41,37 +41,42 @@ displayProductDetails();
 /* FONCTION POUR STOCKER LES PRODUITS DANS LE LOCAL STORAGE */
 function storeProductInLocalStorage() {
 // Écoute du bouton Ajouter au panier
-    addToCart.addEventListener("click", () => {
-// Obliger le client à choisir une couleur
-        if (color.value === "" ) {
+    addToCart.addEventListener("click", (event) => {
+
+// Et si la quantité choisie n'est pas entre 1 et 100 alors on affiche un message d'erreur
+        if (quantity.value < 1 || quantity.value > 100 && color.value === "" ) {
+            alert("Veuillez choisir une couleur et quantité d'article(s) entre 1 et 100!");
+// Si pas de couleur choisie alors on affiche un message d'erreur
+        } else if (color.value === "" ) {
             alert("Veuillez choisir une couleur!");
-// Obliger le client à choisir une quantité entre 1 et 100
+// Et si la quantité choisie n'est pas entre 1 et 100 alors on affiche un message d'erreur
         } else if (quantity.value < 1 || quantity.value > 100 ) {
             alert("Veuillez choisir une quantité d'article(s) entre 1 et 100!");
-// Message de confirmation d'ajout du produit au panier: continuer les achats?
-        } else { (color.value != "" && quantity.value >= 1 || quantity.value <= 100 ) 
-            alert(`Vous avez ajouté ${quantity.value} ${title.textContent} ${color.value} au panier, cliquez sur OK pour continuer vos achats!`)
+// Autrement si couleur et quantité OK alors on envoie les données au local storage
+        } else { 
+            alert(`Vous avez ajouté ${quantity.value} ${title.textContent} ${color.value} au panier, cliquez sur OK pour aller au panier!`)
+            window.location.href="cart.html";
 // Données à enregistrer dans le local storage
-                const customerSelection = {
-                    id: productId,
-                    image: imageUrl,
-                    alt: altTxt,
-                    color: color.value,
-                    quantity: quantity.value,
-                    name: title.textContent,
-                    price: price.textContent,
-                };
+            const customerSelection = {
+                id: productId,
+                image: imageUrl,
+                alt: altTxt,
+                color: color.value,
+                quantity: quantity.value,
+                name: title.textContent,
+                price: price.textContent,
+            };
 // Récuperer les données dans le local storage
     let customerCart = JSON.parse(localStorage.getItem("Canapé"));
 // Si le panier est vide alors on push les données de customerSelection dans le local storage sous forme de tableau
-        if (customerCart === null) {
-            customerCart = [];
-            customerCart.push(customerSelection);
-            localStorage.setItem("Canapé", JSON.stringify(customerCart));
+                if (customerCart === null) {
+                    customerCart = [];
+                    customerCart.push(customerSelection);
+                    localStorage.setItem("Canapé", JSON.stringify(customerCart));
 // Si le panier n'est pas vide: 2 options
-        } else {
+                } else {
 // Définir la constante si le produit est déjà présent dans le panier: trouver par id et couleur
-            const alreadyInCart = customerCart.find(element => element.id == customerSelection.id && element.color == customerSelection.color);
+    const alreadyInCart = customerCart.find(element => element.id == customerSelection.id && element.color == customerSelection.color);
 // Si le produit n'est pas déjà dans le panier alors on push les données
                 if (alreadyInCart == undefined) {
                     customerCart.push(customerSelection);
@@ -81,7 +86,7 @@ function storeProductInLocalStorage() {
                     let newProductQuantityInCart = parseInt(customerSelection.quantity) + parseInt(productInCart.quantity);
                     productInCart.quantity = newProductQuantityInCart;
                     localStorage.setItem("Canapé", JSON.stringify(customerCart));
-                }  
+                }
             }
         }
     })
