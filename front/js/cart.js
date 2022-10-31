@@ -108,4 +108,36 @@ function deleteItems() {
 deleteItems();
 
 
-/* FORMULAIRE */
+/* FONCTION ACTIVER L'ÉCOUTE DU BOUTON ENVOYER ET STOKER LES DONNÉES DU FORMULAIRE */
+// Selection de la div contenant tout le formulaire
+let form = document.querySelector(".cart__order__form");
+
+//Selection des éléments du formulaire
+let firstName = form.firstName;
+let lastName = form.lastName;
+let address = form.address;
+let city = form.city;
+let email = form.email;
+let order = form.submit;
+
+//Declaration des RegExp
+let REGEXEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{3,10}$/;
+let REGEXText = /^[a-zA-Zéêëèîïâäçù ,'-]{3,20}$/;
+let REGEXAddress = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]+$/;
+
+//Verif Prenom
+firstName.addEventListener("input", function () {
+    validFirstName(firstName);
+});
+
+function validFirstName() {
+
+    if (REGEXText.test(firstName.value) == false) {
+        firstName.nextElementSibling.innerHTML = "Le prénom doit contenir un minimum de 3 lettres";
+        return false;
+    } else {
+        firstName.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+
