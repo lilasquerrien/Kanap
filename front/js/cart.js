@@ -109,10 +109,11 @@ deleteItems();
 
 
 /* FONCTION ACTIVER L'ÉCOUTE DU BOUTON ENVOYER ET STOKER LES DONNÉES DU FORMULAIRE */
-// Selection de la div contenant tout le formulaire
+
+// Sélection de la div contenan le formulaire
 let form = document.querySelector(".cart__order__form");
 
-//Selection des éléments du formulaire
+// Constantes des données du formulaire
 let firstName = form.firstName;
 let lastName = form.lastName;
 let address = form.address;
@@ -120,24 +121,78 @@ let city = form.city;
 let email = form.email;
 let order = form.submit;
 
-//Declaration des RegExp
-let REGEXEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{3,10}$/;
+// Déclaration des REGEX
+let REGEXEmail = /^(([a-zA-z0-9])+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 let REGEXText = /^[a-zA-Zéêëèîïâäçù ,'-]{3,20}$/;
-let REGEXAddress = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]+$/;
+let REGEXAddress = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]{3,30}$/;
 
-//Verif Prenom
+// Écoute du prénom
 firstName.addEventListener("input", function () {
     validFirstName(firstName);
-});
+        function validFirstName() {
+            if (REGEXText.test(firstName.value) == false) {
+                firstNameErrorMsg.innerHTML = "Le prénom doit contenir un minimum de 3 caractères";
+                return false;
+            } else {
+                firstNameErrorMsg.innerHTML = "";
+                return true;
+            }
+        }
+})
 
-function validFirstName() {
+// Écoute du nom
+lastName.addEventListener("input", function () {
+    validLastName(lastName);
+        function validLastName() {
+            if (REGEXText.test(lastName.value) == false) {
+                lastNameErrorMsg.innerHTML = "Le nom doit contenir un minimum de 3 lettres";
+                return false;
+            } else {
+                lastNameErrorMsg.innerHTML = "";
+                return true;
+            }
+        }
+})
 
-    if (REGEXText.test(firstName.value) == false) {
-        firstName.nextElementSibling.innerHTML = "Le prénom doit contenir un minimum de 3 lettres";
-        return false;
-    } else {
-        firstName.nextElementSibling.innerHTML = "";
-        return true;
-    }
-}
+// Écoute de l'addresse
+address.addEventListener("input", function () {
+validAddress(address);
+        function validAddress() {
+            if (REGEXAddress.test(address.value) == false) {
+                addressErrorMsg.innerHTML = "L'adresse doit contenir de 1 à 3 chiffres et un minimum de 3 caractères";
+                return false;
+            } else {
+                addressErrorMsg.innerHTML = "";
+                return true;
+            }
+        }
+})
+
+// Écoute de la ville
+city.addEventListener("input", function () {
+    validCity(city);
+        function validCity() {
+            if (REGEXText.test(city.value) == false) {
+                cityErrorMsg.innerHTML = "La ville doit contenir un minimum de 3 caractères";
+                return false;
+            } else {
+                cityErrorMsg.innerHTML = "";
+                return true;
+            }
+        }
+})
+
+// Écoute de l'email
+email.addEventListener("input", function () {
+    validEmail(email);
+        function validEmail() {
+            if (REGEXEmail.test(email.value) == false) {
+                emailErrorMsg.innerHTML = "L'email doit être au format jane.doe@exemple.fr";
+                return false;
+            } else {
+                emailErrorMsg.innerHTML = "";
+                return true;
+            }
+        }
+})
 
