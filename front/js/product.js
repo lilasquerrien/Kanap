@@ -42,7 +42,6 @@ displayProductDetails();
 function storeProductInLocalStorage() {
 // Écoute du bouton Ajouter au panier
     addToCart.addEventListener("click", (event) => {
-
 // Et si la quantité choisie n'est pas entre 1 et 100 alors on affiche un message d'erreur
         if (quantity.value < 1 || quantity.value > 100 && color.value === "" ) {
             alert("Veuillez choisir une couleur et quantité d'article(s) entre 1 et 100!");
@@ -55,7 +54,7 @@ function storeProductInLocalStorage() {
 // Autrement si couleur et quantité OK alors on envoie les données au local storage
         } else { 
             alert(`Vous avez ajouté ${quantity.value} ${title.textContent} ${color.value} au panier, cliquez sur OK pour aller au panier!`)
-            window.location.href="cart.html";
+            window.location.href = "cart.html";
 // Données à enregistrer dans le local storage
             const customerSelection = {
                 id: productId,

@@ -84,7 +84,6 @@ function modifyQuantities() {
 // Appel de la fonction  
 modifyQuantities();
     
-
 /* FONCTION POUR SUPPRIMER DES ARTICLES DU PANIER */
 function deleteItems() {
     let deleteItem = document.querySelectorAll(".deleteItem");
@@ -107,92 +106,110 @@ function deleteItems() {
 // Appel de la fonction
 deleteItems();
 
-
-/* FONCTION ACTIVER L'ÉCOUTE DU BOUTON ENVOYER ET STOKER LES DONNÉES DU FORMULAIRE */
-
-// Sélection de la div contenan le formulaire
-let form = document.querySelector(".cart__order__form");
-
-// Constantes des données du formulaire
-let firstName = form.firstName;
-let lastName = form.lastName;
-let address = form.address;
-let city = form.city;
-let email = form.email;
-let order = form.submit;
-
+/* FONCTIONS POUR CONTROLER LE CONTENU DU FORMULAIRE */
 // Déclaration des REGEX
-let REGEXEmail = /^(([a-zA-z0-9])+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 let REGEXText = /^[a-zA-Zéêëèîïâäçù ,'-]{3,20}$/;
 let REGEXAddress = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]{3,30}$/;
-
+let REGEXEmail = /^(([a-zA-z0-9])+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 // Écoute du prénom
-firstName.addEventListener("input", function () {
-    validFirstName(firstName);
-        function validFirstName() {
-            if (REGEXText.test(firstName.value) == false) {
-                firstNameErrorMsg.innerHTML = "Le prénom doit contenir un minimum de 3 caractères";
-                return false;
-            } else {
-                firstNameErrorMsg.innerHTML = "";
-                return true;
-            }
+firstName.addEventListener("input", validFirstName) 
+    function validFirstName() {
+        if (REGEXText.test(firstName.value) == false) {
+            firstNameErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
+            return false;
+        } else {
+            firstNameErrorMsg.innerHTML = "";
+            return true;
         }
-})
-
+    }
 // Écoute du nom
-lastName.addEventListener("input", function () {
-    validLastName(lastName);
-        function validLastName() {
-            if (REGEXText.test(lastName.value) == false) {
-                lastNameErrorMsg.innerHTML = "Le nom doit contenir un minimum de 3 lettres";
-                return false;
-            } else {
-                lastNameErrorMsg.innerHTML = "";
-                return true;
-            }
+lastName.addEventListener("input", validLastName)
+    function validLastName() {
+        if (REGEXText.test(lastName.value) == false) {
+            lastNameErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptéss";
+            return false;
+        } else {
+            lastNameErrorMsg.innerHTML = "";
+            return true;
         }
-})
-
+    }
 // Écoute de l'addresse
-address.addEventListener("input", function () {
-validAddress(address);
-        function validAddress() {
-            if (REGEXAddress.test(address.value) == false) {
-                addressErrorMsg.innerHTML = "L'adresse doit contenir de 1 à 3 chiffres et un minimum de 3 caractères";
-                return false;
-            } else {
-                addressErrorMsg.innerHTML = "";
-                return true;
-            }
+address.addEventListener("input", validAddress) 
+    function validAddress() {
+        if (REGEXAddress.test(address.value) == false) {
+            addressErrorMsg.innerHTML = "Doit indiquer le numéro puis le nom de la rue";
+            return false;
+        } else {
+            addressErrorMsg.innerHTML = "";
+            return true;
         }
-})
-
+    }
 // Écoute de la ville
-city.addEventListener("input", function () {
-    validCity(city);
-        function validCity() {
-            if (REGEXText.test(city.value) == false) {
-                cityErrorMsg.innerHTML = "La ville doit contenir un minimum de 3 caractères";
-                return false;
-            } else {
-                cityErrorMsg.innerHTML = "";
-                return true;
-            }
+city.addEventListener("input", validCity)
+    function validCity() {
+        if (REGEXText.test(city.value) == false) {
+            cityErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
+            return false;
+        } else {
+            cityErrorMsg.innerHTML = "";
+            return true;
         }
-})
-
+    }
 // Écoute de l'email
-email.addEventListener("input", function () {
-    validEmail(email);
-        function validEmail() {
-            if (REGEXEmail.test(email.value) == false) {
-                emailErrorMsg.innerHTML = "L'email doit être au format jane.doe@exemple.fr";
-                return false;
-            } else {
-                emailErrorMsg.innerHTML = "";
-                return true;
-            }
+email.addEventListener("input", validEmail)
+    function validEmail() {
+        if (REGEXEmail.test(email.value) == false) {
+            emailErrorMsg.innerHTML = "Doit être au format jane.doe@exemple.fr ou janedoe@exemple.com";
+            return false;
+        } else {
+            emailErrorMsg.innerHTML = "";
+            return true;
         }
-})
+    }
 
+/* FONCTION POUR ENVOYER LA COMMANDE DANS LE LOCAL STORAGE */
+function sendOrderToLocalStorage() {
+    let order = document.querySelector("#order");
+// Ecoute du bouton Commander
+    order.addEventListener("click", (event) => {
+// Constante contact contenant les données du formulaire
+        const contact = {
+            firstName : firstName.value,
+            lastName : lastName.value,
+            address : address.value,
+            city : city.value,
+            email : email.value,
+        }
+// Constante products pour récupérer les ID des articles du panier
+        const products = [];
+            for (item of customerCart) {
+            products.push(item.id);
+            }
+// Si le formulaire est correctement rempli 
+        if (validFirstName(firstName) 
+        && validLastName(lastName) 
+        && validAddress(address) 
+        && validCity(city) 
+        && validEmail(email)) {
+// Alors on envoie les données
+            fetch("http://localhost:3000/api/products/order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({contact, products}), 
+            })
+                .then((response) => {
+                    return response.json()
+                })
+                .then(data => {
+                    localStorage.setItem("orderId", data.orderId);
+                    window.location.href = `confirmation.html?orderId=${data.orderId}`;
+                })
+        } else {
+            alert("Vos coordonnées sont incorrectes, veuillez les vérifier afin de valider votre commande!");
+        }
+    })
+}
+// Appel de la fonction
+sendOrderToLocalStorage();
