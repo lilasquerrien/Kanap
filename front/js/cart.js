@@ -171,20 +171,9 @@ email.addEventListener("input", validEmail)
 function sendOrderToLocalStorage() {
     let order = document.querySelector("#order");
 // Ecoute du bouton Commander
-    order.addEventListener("click", (event) => {
+    order.addEventListener("click", () => {
 // Constante contact contenant les données du formulaire
-        const contact = {
-            firstName : firstName.value,
-            lastName : lastName.value,
-            address : address.value,
-            city : city.value,
-            email : email.value,
-        }
-// Constante products pour récupérer les ID des articles du panier
-        const products = [];
-            for (item of customerCart) {
-            products.push(item.id);
-            }
+let getId = customerCart.map(product => product.id);
 // Si le formulaire est correctement rempli 
         if (validFirstName(firstName) 
         && validLastName(lastName) 
@@ -195,15 +184,25 @@ function sendOrderToLocalStorage() {
             fetch("http://localhost:3000/api/products/order", {
                 method: "POST",
                 headers: {
+                    "Accept": "application/json", 
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({contact, products}), 
+                body: JSON.stringify({
+                    contact : {
+                        firstName : firstName.value,
+                        lastName: lastName.value,
+                        address : address.value,
+                        city : city.value,
+                        email : email.value
+                    },
+                    products : getId
+                    })
             })
                 .then((response) => {
                     return response.json()
                 })
                 .then(data => {
-                    localStorage.setItem("orderId", data.orderId);
+                    localStorage.setItem("OrderId", data.orderId);
                     window.location.href = `confirmation.html?orderId=${data.orderId}`;
                 })
         } else {
