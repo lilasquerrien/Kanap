@@ -66,12 +66,12 @@ function storeProductInLocalStorage() {
                 price: price.textContent,
             };
 // Récuperer les données dans le local storage
-    let customerCart = JSON.parse(localStorage.getItem("Canapé"));
+    let customerCart = JSON.parse(localStorage.getItem("Product"));
 // Si le panier est vide alors on push les données de customerSelection dans le local storage sous forme de tableau
                 if (customerCart === null) {
                     customerCart = [];
                     customerCart.push(customerSelection);
-                    localStorage.setItem("Canapé", JSON.stringify(customerCart));
+                    localStorage.setItem("Product", JSON.stringify(customerCart));
 // Si le panier n'est pas vide: 2 options
                 } else {
 // Définir la constante si le produit est déjà présent dans le panier: trouver par id et couleur
@@ -79,12 +79,12 @@ function storeProductInLocalStorage() {
 // Si le produit n'est pas déjà dans le panier alors on push les données
                 if (alreadyInCart == undefined) {
                     customerCart.push(customerSelection);
-                    localStorage.setItem("Canapé", JSON.stringify(customerCart));
+                    localStorage.setItem("Product", JSON.stringify(customerCart));
 // Si le produit (id+couleur identiques) est déjà prédent dans le panier alors on incrémente la quantité
                 } else {
                     let newProductQuantityInCart = parseInt(customerSelection.quantity) + parseInt(productInCart.quantity);
                     productInCart.quantity = newProductQuantityInCart;
-                    localStorage.setItem("Canapé", JSON.stringify(customerCart));
+                    localStorage.setItem("Product", JSON.stringify(customerCart));
                 }
             }
         }

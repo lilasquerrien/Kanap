@@ -1,5 +1,5 @@
 // Récuperer les données dans le local storage
-let customerCart = JSON.parse(localStorage.getItem("Canapé"));
+let customerCart = JSON.parse(localStorage.getItem("Product"));
 
 // Déclarer les variables nécessaires
 let totalPrice = [];
@@ -8,33 +8,34 @@ let totalQuantity = [];
 /* FONCTION POUR AFFICHER LES PRODUITS SÉLECTIONNÉS DANS LE PANIER */
 function displayItems() {
 // Si le panier est vide alors on affiche un message d'alerte
-    if (customerCart === null || customerCart.lenght == 0) {
+    if (customerCart === null || customerCart.lenght == 0) { 
         alert("Votre panier est vide!");
     } else {
 // Trouver la section #cart__items dans cart.html et modifier son contenu 
 // Avec une boucle pour parcourir tous les produits du panier
     for (i = 0 ; i < customerCart.length ; i += 1) {
-        document.querySelector("#cart__items").innerHTML += `<article class="cart__item" data-id="${customerCart[i].id}">
-                                                                <div class="cart__item__img">
-                                                                    <img src="${customerCart[i].image}" alt="${customerCart[i].alt}">
-                                                                </div>
-                                                                <div class="cart__item__content">
-                                                                    <div class="cart__item__content__titlePrice">
-                                                                        <h2>${customerCart[i].name}</h2>
-                                                                        <p>${customerCart[i].price * customerCart[i].quantity}€</p>
-                                                                    </div>
-                                                                    <div class="cart__item__content__settings">
-                                                                        <div class="cart__item__content__settings__quantity">
-                                                                            <p>Couleur : ${customerCart[i].color}</p>
-                                                                            <p>Qté : </p>
-                                                                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" canapeId="${customerCart[i].id}" canapeColor="${customerCart[i].color}" value="${customerCart[i].quantity}">
-                                                                        </div>
-                                                                        <div class="cart__item__content__settings__delete">
-                                                                            <p class="deleteItem" canapeId="${customerCart[i].id}" canapeColor="${customerCart[i].color}">Supprimer</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </article>`;                                                             
+        document.querySelector("#cart__items").innerHTML += 
+        `<article class="cart__item" data-id="${customerCart[i].id}">
+            <div class="cart__item__img">
+                <img src="${customerCart[i].image}" alt="${customerCart[i].alt}">
+            </div>
+            <div class="cart__item__content">
+                <div class="cart__item__content__titlePrice">
+                    <h2>${customerCart[i].name}</h2>
+                        <p>${customerCart[i].price * customerCart[i].quantity}€</p>
+                </div>
+                <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                        <p>Couleur : ${customerCart[i].color}</p>
+                        <p>Qté : </p>
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" canapeId="${customerCart[i].id}" canapeColor="${customerCart[i].color}" value="${customerCart[i].quantity}">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                        <p class="deleteItem" canapeId="${customerCart[i].id}" canapeColor="${customerCart[i].color}">Supprimer</p>
+                    </div>
+                </div>
+            </div>
+        </article>`;                                                             
 // Déclarer les variables quantité et prix et transformer leurs valeurs en nombre                                                 
     let quantityNumber = Number(customerCart[i].quantity);
     let priceNumber = Number(customerCart[i].price * customerCart[i].quantity);
@@ -74,7 +75,7 @@ function modifyQuantities() {
 // Convertir la nouvelle quantité de produit(s) en nombre
         customerCart[i].quantity = Number(modifyQuantity.value);
 // Envoi des nouvelles données vers le local storage
-        localStorage.setItem("Canapé", JSON.stringify(customerCart));
+        localStorage.setItem("Product", JSON.stringify(customerCart));
 // Message d'alerte
             alert("Le nombre d'article(s) a bien été mis à jour dans votre panier!");
             window.location.reload();
@@ -96,7 +97,7 @@ function deleteItems() {
 // Filtrer le panier pour ne garder que les produits non sélectionnés
     customerCart = customerCart.filter(customerCart => customerCart.id !== itemId || customerCart.color !== itemColor);
 // Envoi des données au local storage
-        localStorage.setItem("Canapé", JSON.stringify(customerCart))
+        localStorage.setItem("Product", JSON.stringify(customerCart))
 // Message d'alerte
             alert("L'article a bien été supprimé de votre panier!");
             window.location.reload();
@@ -166,45 +167,54 @@ email.addEventListener("input", validEmail)
             return true;
         }
     }
-
 /* FONCTION POUR ENVOYER LA COMMANDE DANS LE LOCAL STORAGE */
 function sendOrderToLocalStorage() {
     let order = document.querySelector("#order");
-// Ecoute du bouton Commander
+// Écoute du bouton Commander
     order.addEventListener("click", () => {
-// Constante contact contenant les données du formulaire
-let getId = customerCart.map(product => product.id);
+// Constante contact regroupant les champs du formulaire
+    const contact = {
+        firstName : document.querySelector("#firstName").value,
+        lastName : document.querySelector("#lastName").value,
+        address : document.querySelector("#address").value,
+        city : document.querySelector("#city").value,
+        email : document.querySelector("#email").value
+    };
 // Si le formulaire est correctement rempli 
         if (validFirstName(firstName) 
         && validLastName(lastName) 
         && validAddress(address) 
         && validCity(city) 
         && validEmail(email)) {
-// Alors on envoie les données
-            fetch("http://localhost:3000/api/products/order", {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json", 
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    contact : {
-                        firstName : firstName.value,
-                        lastName: lastName.value,
-                        address : address.value,
-                        city : city.value,
-                        email : email.value
-                    },
-                    products : getId
-                    })
-            })
-                .then((response) => {
-                    return response.json()
-                })
-                .then(data => {
-                    localStorage.setItem("OrderId", data.orderId);
-                    window.location.href = `confirmation.html?orderId=${data.orderId}`;
-                })
+// On stocke le contact dans le local storage
+            localStorage.setItem("Contact", JSON.stringify(contact));
+// Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
+        const products = [];
+            for (product of customerCart) {
+                products.push(product.id);
+            };
+            localStorage.setItem("Products", JSON.stringify(products));
+// Constante des informations contact et produits à stocker dans l'API
+        const orderDetails = {
+            contact,
+            products
+        };
+// Alors on envoie les données dans l'API avec fetch
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderDetails),
+        })
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            localStorage.setItem("OrderId", data.orderId);
+            document.location.href = `confirmation.html?orderId=${data.orderId}`;
+        })
+// Message d'erreur
         } else {
             alert("Vos coordonnées sont incorrectes, veuillez les vérifier afin de valider votre commande!");
         }

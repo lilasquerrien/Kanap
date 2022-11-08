@@ -4,14 +4,14 @@ fetch("http://localhost:3000/api/products")
 // Promesse  pour récupérer la réponse puis la transformer en json
     .then(response => 
         response.json())
-// Promesse  pour récupérer les data
+// Promesse  avec la fonction pour récupérer les données de l'API
     .then(data => {
         displayProducts(data)
 // Déclarer la fonction pour afficher les produits
             function displayProducts(data) {
 // Boucle pour afficher chacun des produits
                 for (product of data) {
-// Trouver la section #items dans index.html et modifier son contenu
+// Pour chacun des 8 produits trouver la section #items dans index.html et modifier son contenu
                     let products = document.querySelector("#items").innerHTML +=    
                     `<a href="./product.html?id=${product._id}">
                       <article>
