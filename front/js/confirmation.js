@@ -1,6 +1,8 @@
-// Cibler le contenu HTML du numéro d'Id de la commande
-const orderId = document.querySelector("#orderId");
-// Remplacer le contenu HTML avec le numéro de commande stocké dans le local storage
-orderId.innerHTML = localStorage.getItem("OrderId");
+// Récupérer l'id dans l'URL
+const id = new URLSearchParams(document.location.search);
+// Créer la constante qui contient l'id
+const orderId = id.get("orderId");
+// Injecter l'id dans le contenu HTML
+document.querySelector("#orderId").innerHTML +=`${orderId}`;
 // Vider le local storage
 localStorage.clear();
