@@ -1,5 +1,5 @@
 // Récuperer les données dans le local storage
-let customerCart = JSON.parse(localStorage.getItem("Product"));
+let customerCart = JSON.parse(localStorage.getItem("product"));
 
 // Déclarer les variables nécessaires
 let totalPrice = [];
@@ -75,7 +75,7 @@ function modifyQuantities() {
 // Convertir la nouvelle quantité de produit(s) en nombre
         customerCart[i].quantity = Number(modifyQuantity.value);
 // Envoi des nouvelles données vers le local storage
-        localStorage.setItem("Product", JSON.stringify(customerCart));
+        localStorage.setItem("product", JSON.stringify(customerCart));
 // Message d'alerte
             alert("Le nombre d'article(s) a bien été mis à jour dans votre panier!");
             window.location.reload();
@@ -97,7 +97,7 @@ function deleteItems() {
 // Filtrer le panier pour ne garder que les produits non sélectionnés
     customerCart = customerCart.filter(customerCart => customerCart.id !== itemId || customerCart.color !== itemColor);
 // Envoi des données au local storage
-        localStorage.setItem("Product", JSON.stringify(customerCart))
+        localStorage.setItem("product", JSON.stringify(customerCart))
 // Message d'alerte
             alert("L'article a bien été supprimé de votre panier!");
             window.location.reload();
@@ -187,31 +187,27 @@ function sendOrderToLocalStorage() {
         && validCity(city) 
         && validEmail(email)) {
 // On stocke le contact dans le local storage
-            localStorage.setItem("Contact", JSON.stringify(contact));
+            localStorage.setItem("contact", JSON.stringify(contact));
 // Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
         const products = [];
             for (product of customerCart) {
                 products.push(product.id);
             };
-            localStorage.setItem("Products", JSON.stringify(products));
-// Constante des informations contact et produits à stocker dans l'API
-        const orderDetails = {
-            contact,
-            products
-        };
+            localStorage.setItem("products", JSON.stringify(products));
 // Alors on envoie les données dans l'API avec fetch
         fetch("http://localhost:3000/api/products/order", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(orderDetails),
+            body: JSON.stringify({contact, products}),
         })
         .then(response => 
             response.json()
         )
         .then(data => {
-            localStorage.setItem("OrderId", data.orderId);
+            console.log(data);
+            localStorage.setItem("orderId", data.orderId);
             document.location.href = `confirmation.html?orderId=${data.orderId}`;
         })
 // Message d'erreur

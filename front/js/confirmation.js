@@ -5,4 +5,3 @@ const orderId = id.get("orderId");
 // Injecter l'id dans le contenu HTML
 document.querySelector("#orderId").innerHTML +=`${orderId}`;
 // Vider le local storage
-localStorage.clear();
