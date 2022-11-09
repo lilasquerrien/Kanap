@@ -42,6 +42,7 @@ displayProductDetails();
 function storeProductInLocalStorage() {
 // Écoute du bouton Ajouter au panier
     addToCart.addEventListener("click", (event) => {
+        event.preventDefault(event);
 // Et si la quantité choisie n'est pas entre 1 et 100 alors on affiche un message d'erreur
         if (quantity.value < 1 || quantity.value > 100 && color.value === "" ) {
             alert("Veuillez choisir une couleur et quantité d'article(s) entre 1 et 100!");

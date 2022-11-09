@@ -69,16 +69,23 @@ function modifyQuantities() {
     for (let i = 0; i < newQuantity.length; i++) {
         const modifyQuantity = newQuantity[i];
 // Pour chacun des articles on active l'écoute du bouton modifier la quantité
-        modifyQuantity.addEventListener("change", (event) =>{
+        modifyQuantity.addEventListener("change", (event) => {
+            event.preventDefault(event);
+// Si la quantité choisie n'est pas entre 1 et 100 alors on affiche un message d'erreur
+            if (modifyQuantity.value < 1 || modifyQuantity.value > 100 ) {
+                alert("Veuillez choisir une quantité d'article(s) entre 1 et 100!");
+// Autrement si quantité OK alors 
+            } else { 
 // Modification du contenu HTML
-            newQuantity.innerHTML += `<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${event.target.value}">`;
+            newQuantity.innerHTML += `<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${event.target.value}">`;   
 // Convertir la nouvelle quantité de produit(s) en nombre
-        customerCart[i].quantity = Number(modifyQuantity.value);
-// Envoi des nouvelles données vers le local storage
-        localStorage.setItem("product", JSON.stringify(customerCart));
+            customerCart[i].quantity = Number(modifyQuantity.value);
+// On envoie les données au local storage
+            localStorage.setItem("product", JSON.stringify(customerCart));
 // Message d'alerte
-            alert("Le nombre d'article(s) a bien été mis à jour dans votre panier!");
-            window.location.reload();
+                alert("Le nombre d'article(s) a bien été mis à jour dans votre panier!");
+                   window.location.reload();
+            }
         })
     }
 }
@@ -91,6 +98,7 @@ function deleteItems() {
 // Pour chacun des articles du panier on active l'écoute du bouton supprimer
     for (let i = 0; i < deleteItem.length; i++) {
         deleteItem[i].addEventListener("click", (event) => {
+            event.preventDefault(event);
 // Variables pour cibler le produit à supprimer
             let itemId = customerCart[i].id;
             let itemColor = customerCart[i].color;
@@ -171,7 +179,8 @@ email.addEventListener("input", validEmail)
 function sendOrderToLocalStorage() {
     let order = document.querySelector("#order");
 // Écoute du bouton Commander
-    order.addEventListener("click", () => {
+    order.addEventListener("click", (event) => {
+        event.preventDefault(event);
 // Constante contact regroupant les champs du formulaire
     const contact = {
         firstName : document.querySelector("#firstName").value,
@@ -180,40 +189,41 @@ function sendOrderToLocalStorage() {
         city : document.querySelector("#city").value,
         email : document.querySelector("#email").value
     };
-// Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
-    const products = []
-        for (let i = 0; i < customerCart.length; i++) {
-            products.push(customerCart[i].id);
-      }
 // Si le formulaire est correctement rempli 
-        if (validFirstName(firstName) 
+        if (customerCart !== null
+        && validFirstName(firstName) 
         && validLastName(lastName) 
         && validAddress(address) 
         && validCity(city) 
         && validEmail(email)) {
+// Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
+    const products = []
+        for (let i = 0; i < customerCart.length; i++) {
+        products.push(customerCart[i].id);
+        }
 // On stocke le contact dans le local storage
             localStorage.setItem("contact", JSON.stringify(contact));
             localStorage.setItem("products", JSON.stringify(products));
-// Alors on envoie les données dans l'API avec fetch
-        fetch("http://localhost:3000/api/products/order", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({contact, products})
-        })
-        .then(response => {
-            return response.json()
-        })
-        .then(data => {
-            console.log(data);
-            localStorage.setItem("orderId", data.orderId);
-            window.location.href = `confirmation.html?orderId=${data.orderId}`;
-        })
+// Et on envoie les données dans l'API avec fetch
+                fetch("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({contact, products})
+                })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data);
+                    localStorage.setItem("orderId", data.orderId);
+                    window.location.href = `confirmation.html?orderId=${data.orderId}`;
+                })
 // Message d'erreur
         } else {
-            alert("Vos coordonnées sont incorrectes, veuillez les vérifier afin de valider votre commande!");
+            alert("Veuillez vérifier vos coordonnées et/ou le contenu de votre panier afin de poursuivre!");
         }
     })
 }
