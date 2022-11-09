@@ -180,6 +180,11 @@ function sendOrderToLocalStorage() {
         city : document.querySelector("#city").value,
         email : document.querySelector("#email").value
     };
+// Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
+    const products = []
+        for (let i = 0; i < customerCart.length; i++) {
+            products.push(customerCart[i].id);
+      }
 // Si le formulaire est correctement rempli 
         if (validFirstName(firstName) 
         && validLastName(lastName) 
@@ -188,27 +193,23 @@ function sendOrderToLocalStorage() {
         && validEmail(email)) {
 // On stocke le contact dans le local storage
             localStorage.setItem("contact", JSON.stringify(contact));
-// Constante products pour récuperer les ID et les envoyer sous forme d'un tableau dans le local storage
-        const products = [];
-            for (product of customerCart) {
-                products.push(product.id);
-            };
             localStorage.setItem("products", JSON.stringify(products));
 // Alors on envoie les données dans l'API avec fetch
         fetch("http://localhost:3000/api/products/order", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             },
-            body: JSON.stringify({contact, products}),
+            body: JSON.stringify({contact, products})
         })
-        .then(response => 
-            response.json()
-        )
+        .then(response => {
+            return response.json()
+        })
         .then(data => {
             console.log(data);
             localStorage.setItem("orderId", data.orderId);
-            document.location.href = `confirmation.html?orderId=${data.orderId}`;
+            window.location.href = `confirmation.html?orderId=${data.orderId}`;
         })
 // Message d'erreur
         } else {
