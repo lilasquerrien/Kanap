@@ -82,7 +82,7 @@ function modifyQuantities() {
             customerCart[i].quantity = Number(modifyQuantity.value);
 // On envoie les données au local storage
             localStorage.setItem("product", JSON.stringify(customerCart));
-// Message d'alerte
+// Message d'alerte puis reload automatique de la page
                 alert("Le nombre d'article(s) a bien été mis à jour dans votre panier!");
                    window.location.reload();
             }
@@ -106,7 +106,7 @@ function deleteItems() {
     customerCart = customerCart.filter(customerCart => customerCart.id !== itemId || customerCart.color !== itemColor);
 // Envoi des données au local storage
         localStorage.setItem("product", JSON.stringify(customerCart))
-// Message d'alerte
+// Message d'alerte puis reload automatique de la page
             alert("L'article a bien été supprimé de votre panier!");
             window.location.reload();
         })
@@ -124,7 +124,7 @@ let REGEXEmail = /^(([a-zA-z0-9])+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.(
 firstName.addEventListener("input", validFirstName) 
     function validFirstName() {
         if (REGEXText.test(firstName.value) == false) {
-            firstNameErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
+            firstNameErrorMsg.innerHTML = "Un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
             return false;
         } else {
             firstNameErrorMsg.innerHTML = "";
@@ -135,7 +135,7 @@ firstName.addEventListener("input", validFirstName)
 lastName.addEventListener("input", validLastName)
     function validLastName() {
         if (REGEXText.test(lastName.value) == false) {
-            lastNameErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptéss";
+            lastNameErrorMsg.innerHTML = "Un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptéss";
             return false;
         } else {
             lastNameErrorMsg.innerHTML = "";
@@ -146,7 +146,7 @@ lastName.addEventListener("input", validLastName)
 address.addEventListener("input", validAddress) 
     function validAddress() {
         if (REGEXAddress.test(address.value) == false) {
-            addressErrorMsg.innerHTML = "Doit indiquer le numéro puis le nom de la rue";
+            addressErrorMsg.innerHTML = "Un numéro de 1 à 3 chiffres puis le nom de la rue";
             return false;
         } else {
             addressErrorMsg.innerHTML = "";
@@ -157,7 +157,7 @@ address.addEventListener("input", validAddress)
 city.addEventListener("input", validCity)
     function validCity() {
         if (REGEXText.test(city.value) == false) {
-            cityErrorMsg.innerHTML = "Doit contenir un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
+            cityErrorMsg.innerHTML = "Un minimum de 3 lettres, les chiffres et caractères spéciaux ne sont pas acceptés";
             return false;
         } else {
             cityErrorMsg.innerHTML = "";
@@ -168,13 +168,14 @@ city.addEventListener("input", validCity)
 email.addEventListener("input", validEmail)
     function validEmail() {
         if (REGEXEmail.test(email.value) == false) {
-            emailErrorMsg.innerHTML = "Doit être au format jane.doe@exemple.fr ou janedoe@exemple.com";
+            emailErrorMsg.innerHTML = "Au format jane.doe@exemple.fr ou janedoe@exemple.com";
             return false;
         } else {
             emailErrorMsg.innerHTML = "";
             return true;
         }
     }
+
 /* FONCTION POUR ENVOYER LA COMMANDE DANS LE LOCAL STORAGE */
 function sendOrderToLocalStorage() {
     let order = document.querySelector("#order");
@@ -201,7 +202,7 @@ function sendOrderToLocalStorage() {
         for (let i = 0; i < customerCart.length; i++) {
         products.push(customerCart[i].id);
         }
-// On stocke le contact dans le local storage
+// On stocke le contact et les produits dans le local storage
             localStorage.setItem("contact", JSON.stringify(contact));
             localStorage.setItem("products", JSON.stringify(products));
 // Et on envoie les données dans l'API avec fetch

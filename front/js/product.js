@@ -17,7 +17,8 @@ function displayProductDetails(){
     fetch("http://localhost:3000/api/products/" + productId)
 // Promesse  pour récupérer la réponse puis la transformer en json
         .then(response => 
-            response.json())
+            response.json()
+        )
 // Promesse  pour modifier les datas des différents produits
         .then(data => {
             image.innerHTML += `<img src="${data.imageUrl}" alt="${data.altTxt}">`;
@@ -27,9 +28,10 @@ function displayProductDetails(){
             price.innerHTML += `<span id="price">${data.price}</span>`;
             description.innerHTML += `<p id="description">${data.description}}</p>`;
 // Boucle pour modifier les couleurs
-        for (i = 0; i < data.colors.length; i++) {
-            color.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`
-        }})
+            for (i = 0; i < data.colors.length; i++) {
+                color.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`
+            }
+        })
 // Message d'erreur
         .catch(error => {
             alert("Erreur, veuillez recharger la page!")
